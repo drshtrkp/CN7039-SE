@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CN7039 Software Engineering — Complete Interactive Mastery Book</title>
+  <style>
+    :root {
+      --bg: #eef2f0;
+      --paper: #fcfaf4;
+      --paper-2: #f4f0e4;
+      --sidebar: #14281d;
+      --sidebar-hover: #1f3d2c;
+      --ink: #1e2923;
+      --muted: #526358;
+      --accent: #007f66;
+      --accent-2: #00b894;
+      --warn: #b45309;
+      --danger: #b91c1c;
+      --ok: #15803d;
+      --border: #d8d3c4;
+      --shadow: 0 10px 30px rgba(15, 35, 24, 0.10);
+      --font-serif: Georgia, "Times New Roman", serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body.dark {
+      --bg: #0d1411;
+      --paper: #16201b;
+      --paper-2: #1d2b24;
+      --sidebar: #09100d;
+      --sidebar-hover: #172720;
+      --ink: #e7efe9;
+      --muted: #9eb3a6;
+      --accent: #10b981;
+      --accent-2: #34d399;
+      --border: #2a3d33;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--font-sans); background: var(--bg); color: var(--ink); display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 295px; background: var(--sidebar); color: #edf5ef; display: flex; flex-direction: column;
+      position: fixed; top: 0; bottom: 0; left: 0; overflow-y: auto; z-index: 30; border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .brand { padding: 18px 18px 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .brand h1 { margin: 0; font-size: 1.02rem; color: #6ee7b7; }
+    .brand p { margin: 4px 0 0; font-size: 0.76rem; color: #b7cbc0; }
+    .countdown-box {
+      margin: 10px 16px; padding: 10px 12px; background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(110, 231, 183, 0.25); border-radius: 8px; font-size: 0.77rem; line-height: 1.45;
+    }
+    .nav-group-label { padding: 10px 18px 4px; font-size: 0.69rem; text-transform: uppercase; letter-spacing: 1px; color: #87a695; font-weight: 700; }
+    .nav-btn {
+      width: 100%; text-align: left; background: none; border: none; color: #ddebe2; padding: 8px 18px;
+      font-size: 0.84rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-btn:hover { background: var(--sidebar-hover); }
+    .nav-btn.active { background: var(--accent); color: #fff; font-weight: 600; }
+    .pill { font-size: 0.68rem; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,0.16); }
+
+    .main { margin-left: 295px; flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .topbar {
+      background: var(--paper); border-bottom: 1px solid var(--border); padding: 12px 24px;
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 15;
+    }
+    .progress-wrap { display: flex; align-items: center; gap: 10px; font-size: 0.84rem; }
+    .progress-bar { width: 150px; height: 10px; background: var(--paper-2); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: 0%; transition: width 0.3s; }
+    .topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn { padding: 7px 13px; border-radius: 7px; border: 1px solid var(--border); background: var(--paper-2); color: var(--ink); cursor: pointer; font-size: 0.83rem; font-weight: 600; }
+    .btn:hover { filter: brightness(0.96); }
+    .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+    .book-container { max-width: 990px; width: 100%; margin: 24px auto 48px; padding: 0 18px; }
+    .book-page { display: none; background: var(--paper); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: 34px 38px; }
+    .book-page.active { display: block; }
+    .page-header { border-bottom: 2px solid var(--accent); padding-bottom: 14px; margin-bottom: 22px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px; }
+    .page-kicker { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--accent); font-weight: 700; }
+    .page-header h2 { margin: 4px 0 0; font-family: var(--font-serif); font-size: 1.68rem; }
+    .page-num { font-family: var(--font-serif); color: var(--muted); font-size: 0.9rem; }
+
+    h3 { font-family: var(--font-serif); margin-top: 24px; color: var(--accent); }
+    p, li { line-height: 1.65; }
+    .source-tag { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: rgba(0, 127, 102, 0.12); color: var(--accent); margin-bottom: 6px; margin-right: 6px; }
+    .book-tag { background: rgba(37, 99, 235, 0.12); color: #1d4ed8; }
+    body.dark .book-tag { color: #93c5fd; }
+    .examiner-tag { background: rgba(180, 83, 9, 0.14); color: var(--warn); }
+
+    .level-box { border: 1px solid var(--border); border-radius: 10px; background: var(--paper-2); margin: 16px 0; overflow: hidden; }
+    .level-tabs { display: flex; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.03); flex-wrap: wrap; }
+    .level-tab { flex: 1; min-width: 130px; padding: 10px 12px; border: none; background: transparent; color: var(--muted); font-weight: 600; font-size: 0.84rem; cursor: pointer; }
+    .level-tab.active { background: var(--paper); color: var(--accent); border-bottom: 3px solid var(--accent); }
+    .level-content { padding: 16px 20px; background: var(--paper); }
+    .level-panel { display: none; }
+    .level-panel.active { display: block; }
+
+    .callout { border-left: 4px solid var(--accent); background: var(--paper-2); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 14px 0; }
+    .callout.blue { border-left-color: #2563eb; }
+    .today-row { background: rgba(16, 185, 129, 0.14); }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.86rem; }
+    th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { background: var(--paper-2); color: var(--accent); font-weight: 700; }
+
+    .diagram-frame { border: 1px solid var(--border); background: #fff; color: #1e2923; border-radius: 10px; padding: 14px; margin: 16px 0; overflow-x: auto; }
+    .diagram-caption { font-size: 0.81rem; color: #4b5563; margin-top: 8px; text-align: center; font-style: italic; }
+
+    .flash-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+    .flash-scene { perspective: 1000px; max-width: 640px; margin: 18px auto; }
+    .flash-card { width: 100%; min-height: 245px; position: relative; transform-style: preserve-3d; transition: transform 0.55s; cursor: pointer; }
+    .flash-card.flipped { transform: rotateY(180deg); }
+    .flash-face {
+      position: absolute; inset: 0; backface-visibility: hidden; border: 2px solid var(--accent); border-radius: 14px; padding: 26px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+      background: var(--paper-2); box-shadow: var(--shadow);
+    }
+    .flash-back { transform: rotateY(180deg); background: var(--paper); align-items: flex-start; text-align: left; }
+    .flash-term { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; color: var(--accent); }
+    .flash-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+    .q-card { border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin: 16px 0; background: var(--paper-2); }
+    .q-opt { display: block; margin: 8px 0; padding: 9px 12px; border: 1px solid var(--border); border-radius: 7px; background: var(--paper); cursor: pointer; }
+    .q-opt input { margin-right: 8px; }
+    .feedback { margin-top: 12px; padding: 11px 14px; border-radius: 7px; font-size: 0.9rem; display: none; }
+    .feedback.show { display: block; }
+    .feedback.ok { background: rgba(21, 128, 61, 0.14); border: 1px solid var(--ok); }
+    .feedback.bad { background: rgba(185, 28, 28, 0.14); border: 1px solid var(--danger); }
+    textarea, input[type="text"] { width: 100%; padding: 10px; border-radius: 7px; border: 1px solid var(--border); background: var(--paper); color: var(--ink); font-family: inherit; font-size: 0.9rem; margin-top: 8px; }
+
+    .book-footer { display: flex; justify-content: space-between; margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .menu-toggle { display: none; }
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); transition: transform 0.25s; }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .menu-toggle { display: inline-block; }
+      .book-page { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <h1>CN7039 MASTERY BOOK</h1>
+      <p>PPTs + Dennis/Wixom/Roth 8e</p>
+    </div>
+    <div class="countdown-box" id="countdownBox">Loading countdown...</div>
+
+    <div class="nav-group-label">Front Matter</div>
+    <button class="nav-btn active" onclick="goPage('cover')"><span>📖 Cover &amp; Coverage Matrix</span><span class="pill">Start</span></button>
+    <button class="nav-btn" onclick="goPage('schedule')"><span>📅 32-Day Plan (15 Nov–16 Dec)</span><span class="pill">32d</span></button>
+
+    <div class="nav-group-label">Weekly Chapters (PPTs + Book)</div>
+    <button class="nav-btn" onclick="goPage('ch1')"><span>Ch. 1: IS, Stakeholders &amp; ROI</span><span class="pill">Wk 1</span></button>
+    <button class="nav-btn" onclick="goPage('ch2')"><span>Ch. 2: SDLC, Sourcing &amp; Scrum</span><span class="pill">Wk 2</span></button>
+    <button class="nav-btn" onclick="goPage('ch3')"><span>Ch. 3: Use Case Diagrams</span><span class="pill">Wk 3</span></button>
+    <button class="nav-btn" onclick="goPage('ch4')"><span>Ch. 4: DB, ERD &amp; Normalization</span><span class="pill">Day 4–5</span></button>
+    <button class="nav-btn" onclick="goPage('ch5')"><span>Ch. 5: Data Flow Diagrams</span><span class="pill">Wk 6</span></button>
+    <button class="nav-btn" onclick="goPage('ch6')"><span>Ch. 6: OOP &amp; Class Diagrams</span><span class="pill">Wk 7–8</span></button>
+    <button class="nav-btn" onclick="goPage('ch7')"><span>Ch. 7: Physical DFD, Arch &amp; Deploy</span><span class="pill">Lab 9</span></button>
+
+    <div class="nav-group-label">Decode &amp; Draw From Scratch</div>
+    <button class="nav-btn" onclick="goPage('draw')"><span>✏️ Decode &amp; Draw Blueprints</span><span class="pill">4 Core</span></button>
+    <button class="nav-btn" onclick="goPage('story')"><span>🎭 DrōnTeq &amp; NovaCare Stories</span><span class="pill">Story</span></button>
+    <button class="nav-btn" onclick="goPage('flashcards')"><span>🃏 Glossary Flashcard Vault</span><span class="pill">100</span></button>
+
+    <div class="nav-group-label">Testing &amp; Bootcamp</div>
+    <button class="nav-btn" onclick="goPage('patterns')"><span>📝 Quizzes &amp; Question Patterns</span><span class="pill">14 Qs</span></button>
+    <button class="nav-btn" onclick="goPage('bootcamp')"><span>🕵️ Diagram Error Bootcamp</span><span class="pill">Stages</span></button>
+    <button class="nav-btn" onclick="goPage('mock')"><span>⏱️ 200-Mark Mock &amp; Register</span><span class="pill">TCA</span></button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="btn menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰ Menu</button>
+        <div class="progress-wrap">
+          <span><strong>Mastery:</strong></span>
+          <div class="progress-bar"><div class="progress-fill" id="masteryFill"></div></div>
+          <span id="masteryText">0%</span>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn" onclick="toggleTheme()">🌓 Paper / Night</button>
+        <button class="btn" onclick="markCurrentRead()">✓ Mark Studied</button>
+      </div>
+    </header>
+
+    <div class="book-container">
+
+      <!-- COVER -->
+      <section class="book-page active" id="page-cover">
+        <div class="page-header">
+          <div><div class="page-kicker">UEL CN7039 Software Engineering • Slides + Dennis/Wixom/Roth 8th Ed.</div><h2>The Complete Interactive Mastery Book</h2></div>
+          <div class="page-num">Page 1 of 15</div>
+        </div>
+        <p>Read this book daily from <strong>15 November 2026 to 16 December 2026</strong> ahead of your <strong>18 December 2026 (1:00 PM) TCA</strong>. Every chapter blends <strong>Dr Fadi Safieddine’s CN7039 PPTs/Labs</strong> with the full explanations, examples, and <strong>DrōnTeq</strong> running story from <em>Systems Analysis and Design (8th Ed.)</em>.</p>
+
+        <div class="callout">
+          <span class="source-tag">CN7039 EXAM AUTHORITY</span> <span class="source-tag book-tag">TEXTBOOK 8e ENRICHMENT</span><br>
+          <strong>4 Compulsory Drawn Diagrams:</strong> (1) UML Use Case, (2) Crow’s Foot ERD, (3) UML Class Diagram, (4) DFD (Logical &amp; Physical).<br>
+          <strong>Notation Rule:</strong> Where the textbook uses Gane &amp; Sarson shapes (shadowed box for External Entity) and Dr Safieddine’s slides draw Ovals + 3-part Process boxes, both are shown clearly so you never get confused!
+        </div>
+
+        <h3>Master Syllabus &amp; Textbook Alignment Matrix</h3>
+        <table>
+          <thead><tr><th>CN7039 Module</th><th>PPT / Lab Coverage</th><th>Dennis et al. 8e Chapters</th><th>Core Diagram / Skill</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Week 1</strong></td><td>System (I-P-O), IS/IT, Stakeholders, Drivers, ERP/SCM/CRM, Root Cause, Lifts &amp; Supermarket</td><td>Ch. 1 (Analyst Roles, System Request, ROI/BEP/NPV) &amp; Ch. 3 (Root Cause, Elicitation)</td><td>Problem vs Root Cause + Feasibility Math</td></tr>
+            <tr><td><strong>Week 2</strong></td><td>SDLC 7 Phases, Cost Graph, Linear vs Waterfall, Sourcing, CBD (RAD/XP/Agile), Prototyping, Med Kits</td><td>Ch. 2 (Waterfall, Parallel, V-Model, System vs Throwaway Prototyping), Ch. 6 (Make/Buy), Ch. 13 (Scrum)</td><td>SDLC Selection + Cost-of-Error Curve</td></tr>
+            <tr><td><strong>Week 3</strong></td><td>UML Overview, Use Case Actors (no DB/Printer!), Boundary, <code>«include»</code>, <code>«extend»</code>, Case 7, Peri QR</td><td>Ch. 4 (Casual Use Case Format, Pre/Postconditions, Triggers, Exceptions)</td><td><strong>1. UML Use Case Diagram</strong></td></tr>
+            <tr><td><strong>Day 4–5</strong></td><td>Relational DB, Keys, Entity/Referential Integrity, Crow’s Foot, M:N Resolution, Cinema ERD</td><td>Ch. 5 + App. 5A (Independent vs Dependent Entities, Modality, <strong>1NF/2NF/3NF</strong>, CRUD Matrix)</td><td><strong>2. Crow’s Foot ERD + 3NF</strong></td></tr>
+            <tr><td><strong>Week 6</strong></td><td>DFD Notation, Miracle/Sinkhole/Grey Hole, Levelling, Balancing, Hotel/Attendance/Spot Mistakes</td><td>Ch. 4 (Event-Response &rarr; Context &rarr; Fragments &rarr; L0 &rarr; L1/L2, <strong>Law of Conservation of Data</strong>)</td><td><strong>3. Data Flow Diagram (DFD)</strong></td></tr>
+            <tr><td><strong>Week 7–8</strong></td><td>OOP, Class Diagrams (<code>◆</code> vs <code>◇</code> vs <code>△</code>), Polymorphism, Activity/SSD Theory, Design</td><td>Ch. 9 (Cohesion &amp; Coupling scale, Factoring) &amp; Ch. 11–12 (Testing &amp; Conversion Strategies)</td><td><strong>4. UML Class Diagram</strong></td></tr>
+            <tr><td><strong>Lab 9</strong></td><td>Physical DFD, 5 Layers, File Server vs Client/Server, Thin/Fat Client, 3-Tier</td><td>Ch. 7 (4 Software Functions, n-Tier, Cloud, Security) &amp; Ch. 9 (5 Steps Logical &rarr; Physical DFD + Human–Machine Boundary)</td><td><strong>Physical DFD &amp; Architecture</strong></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- SCHEDULE -->
+      <section class="book-page" id="page-schedule">
+        <div class="page-header">
+          <div><div class="page-kicker">32-Day Reading Plan • 15 Nov 2026 to 16 Dec 2026</div><h2>Daily Book, Story &amp; Practice Schedule</h2></div>
+          <div class="page-num">Page 2 of 15</div>
+        </div>
+        <div id="scheduleTableWrap"></div>
+      </section>
+
+      <!-- CH 1 -->
+      <section class="book-page" id="page-ch1">
+        <div class="page-header">
+          <div><div class="page-kicker">Chapter 1 • Week 1 PPTs + Textbook Ch. 1 &amp; 3</div><h2>IS Foundations, Feasibility Math &amp; Root-Cause Analysis</h2></div>
+          <div class="page-num">Page 3 of 15</div>
+        </div>
+        <span class="source-tag">CN7039 Week 1 PPTs &amp; Labs</span><span class="source-tag book-tag">Textbook 8e Ch. 1 &amp; 3</span>
+        <div class="level-box">
+          <div class="level-tabs">
+            <button class="level-tab active" onclick="switchLevel(this, 0)">Level 1: Beginner</button>
+            <button class="level-tab" onclick="switchLevel(this, 1)">Level 2: Exam Standard</button>
+            <button class="level-tab" onclick="switchLevel(this, 2)">Level 3: Examiner &amp; Textbook 8e</button>
+          </div>
+          <div class="level-content">
+            <div class="level-panel active">
+              <p>A <strong>System</strong> takes input &rarr; processes it &rarr; produces output. An <strong>Information System</strong> turns raw <strong>Data</strong> (`40, London`) into meaningful <strong>Information</strong> (`Mark lives in Bristol`). Think of the <strong>Consultant Effect</strong>: a doctor who only prescribes painkillers for a headache treats <em>symptoms</em>; a good analyst finds the <em>root cause</em> (infection).</p>
+            </div>
+            <div class="level-panel">
+              <ul>
+                <li><strong>Stakeholders:</strong> System Owners (sponsors/pay), System Users (Internal/External, Remote, Mobile), System Designers (blueprints), System Builders (code), Analysts (Business vs System Analyst).</li>
+                <li><strong>5 Business Drivers:</strong> Globalization, E-Commerce (B2C/B2B) vs E-Business, Knowledge Asset Management, CPI &amp; TQM, Business Process Redesign (BPR).</li>
+                <li><strong>Enterprise Apps:</strong> ERP (integrated company suite), SCM (`Suppliers &rarr; Processes &rarr; Products`), CRM (inquiry to post-sale support).</li>
+                <li><strong>Project vs Process Mgmt:</strong> Single project time/budget vs ongoing methodology standards across all projects.</li>
+              </ul>
+            </div>
+            <div class="level-panel">
+              <ul>
+                <li><strong>[Textbook Ch. 1] 3 Feasibilities &amp; Financial Formulas:</strong> Technical (Can we build it?), Economic (Should we?), Organizational (Will they use it?).<br>
+                  • <code>ROI = (Total Benefits - Total Costs) / Total Costs</code><br>
+                  • <code>PV = CashFlow / (1 + r)^n</code>; <code>NPV = Sum(PV Benefits) - Sum(PV Costs)</code> (accept if NPV &gt; 0)<br>
+                  • <code>Break-Even Point = Years negative + (NetCashFlow - CumCashFlow) / NetCashFlow</code></li>
+                <li><strong>[Textbook Ch. 3] Functional vs Nonfunctional Requirements:</strong> Process/Information needed vs Operational, Performance, Security, Cultural/Political constraints.</li>
+                <li><strong>Worked Cases:</strong> Supermarket 12% expiry loss (root cause: manual checks + no upward reporting); 18-floor lifts (root cause: naive nearest-lift stranding lifts after rush hour).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CH 2 -->
+      <section class="book-page" id="page-ch2">
+        <div class="page-header">
+          <div><div class="page-kicker">Chapter 2 • Week 2 PPTs + Textbook Ch. 2, 6, 11–13</div><h2>SDLC, Cost Curve, Sourcing, Prototyping &amp; Agile/Scrum</h2></div>
+          <div class="page-num">Page 4 of 15</div>
+        </div>
+        <span class="source-tag">CN7039 Week 2 PPTs &amp; Med Kits Case</span><span class="source-tag book-tag">Textbook 8e Ch. 2, 6, 11–13</span>
+        <div class="diagram-frame">
+          <svg viewBox="0 0 760 200" width="100%" aria-label="Cost of Error Graph">
+            <rect x="0" y="0" width="760" height="200" fill="#fff"/>
+            <text x="20" y="22" font-size="13" font-weight="bold">Week 2 Slide 17: Exponential Cost of Fixing Errors Late in SDLC</text>
+            <line x1="70" y1="36" x2="70" y2="160" stroke="#374151" stroke-width="2"/><line x1="70" y1="160" x2="710" y2="160" stroke="#374151" stroke-width="2"/>
+            <text x="18" y="48" font-size="11">$2,000</text><text x="18" y="102" font-size="11">$1,000</text><text x="35" y="160" font-size="11">$0</text>
+            <polyline fill="none" stroke="#007f66" stroke-width="4" points="95,157 190,153 285,147 380,130 475,103 570,70 665,38"/>
+            <text x="72" y="182" font-size="11">1.Planning</text><text x="167" y="182" font-size="11">2.Analysis</text><text x="265" y="182" font-size="11">3.Design</text>
+            <text x="350" y="182" font-size="11">4.Develop</text><text x="453" y="182" font-size="11">5.Testing</text><text x="535" y="182" font-size="11">6.Implement</text><text x="632" y="182" font-size="11">7.Maintain</text>
+          </svg>
+        </div>
+        <div class="level-box">
+          <div class="level-tabs">
+            <button class="level-tab active" onclick="switchLevel(this, 0)">Level 1: Beginner</button>
+            <button class="level-tab" onclick="switchLevel(this, 1)">Level 2: Exam Standard</button>
+            <button class="level-tab" onclick="switchLevel(this, 2)">Level 3: Textbook 8e Deep-Dive</button>
+          </div>
+          <div class="level-content">
+            <div class="level-panel active"><p><strong>Linear</strong> = one-way street (no going back). <strong>Waterfall</strong> = river where you can paddle back upstream if you find an error. <strong>CBD</strong> reuses pre-built software blocks instead of coding from scratch.</p></div>
+            <div class="level-panel">
+              <ul>
+                <li><strong>7 Phases:</strong> Planning (CSF, Scope, Plan, Milestones) &rarr; Analysis (JAD, Requirements, Sign-off) &rarr; Design (Tech Arch, System Model) &rarr; Development &rarr; Testing (Unit, Integration, System, UAT) &rarr; Implementation (Parallel, Plunge, Pilot, Phased; Online/Workshop training) &rarr; Maintenance (Help desk).</li>
+                <li><strong>Sourcing:</strong> Insourcing (sensitive/unique), Selfsourcing (reduces <em>invisible backlog</em>; never for ERP/infra), Outsourcing (4 choices; risk of IP exposure/dependency).</li>
+                <li><strong>CBD &amp; Prototyping:</strong> RAD, XP (tiny phases), Agile; Proof-of-concept &amp; Selling prototypes.</li>
+              </ul>
+            </div>
+            <div class="level-panel">
+              <ul>
+                <li><strong>[Textbook Ch. 2] System Prototyping vs Throwaway Prototyping:</strong> System prototype evolves into final system (fast, but risks weak analysis); Throwaway (design) prototype explores unclear tech/UI and is discarded before real build (more stable).</li>
+                <li><strong>[Textbook Ch. 11–12] Testing &amp; Conversion:</strong> <em>Black-box</em> (from specs) vs <em>White-box</em> (reads code); <em>Stubs</em> simulate unfinished modules; <em>Alpha</em> (fake data) vs <em>Beta</em> (real data). Conversion across 3 dimensions: Style (Direct/Parallel), Location (Pilot/Phased/Simultaneous), Modules (Whole/Modular).</li>
+                <li><strong>[Textbook Ch. 13] Scrum Framework:</strong> Product Owner (backlog priority), ScrumMaster (servant leader removing blockers), Dev Team (5–9 self-organizing). Sprints (1–4 wks), User Stories (<em>As a..., I want..., So that...</em>), Story Points, Team Velocity.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CH 3 -->
+      <section class="book-page" id="page-ch3">
+        <div class="page-header">
+          <div><div class="page-kicker">Chapter 3 • Week 3 PPTs + Textbook Ch. 4</div><h2>UML &amp; Core Diagram 1: Use Case Diagrams</h2></div>
+          <div class="page-num">Page 5 of 15</div>
+        </div>
+        <span class="source-tag">CN7039 Week 3 PPTs &amp; Case 7</span><span class="source-tag book-tag">Textbook 8e Ch. 4 (Casual Use Cases)</span>
+        <div class="diagram-frame">
+          <svg viewBox="0 0 760 250" width="100%" aria-label="Use Case Diagram">
+            <rect x="0" y="0" width="760" height="250" fill="#fff"/>
+            <rect x="175" y="15" width="385" height="220" fill="#f8fafc" stroke="#007f66" stroke-width="2.5"/>
+            <text x="368" y="36" text-anchor="middle" font-size="14" font-weight="bold">Appointment System</text>
+            <circle cx="80" cy="76" r="13" fill="#d1fae5" stroke="#14281d" stroke-width="2"/><line x1="80" y1="89" x2="80" y2="124" stroke="#14281d" stroke-width="2"/><line x1="60" y1="103" x2="100" y2="103" stroke="#14281d" stroke-width="2"/><line x1="80" y1="124" x2="65" y2="144" stroke="#14281d" stroke-width="2"/><line x1="80" y1="124" x2="95" y2="144" stroke="#14281d" stroke-width="2"/><text x="80" y="162" text-anchor="middle" font-size="12" font-weight="bold">Patient</text>
+            <ellipse cx="285" cy="92" rx="74" ry="24" fill="#fff" stroke="#14281d" stroke-width="2"/><text x="285" y="96" text-anchor="middle" font-size="12">Make Appointment</text>
+            <ellipse cx="475" cy="70" rx="68" ry="21" fill="#fff" stroke="#14281d" stroke-width="2"/><text x="475" y="74" text-anchor="middle" font-size="11">Verify Patient ID</text>
+            <ellipse cx="475" cy="138" rx="72" ry="21" fill="#fff" stroke="#14281d" stroke-width="2"/><text x="475" y="142" text-anchor="middle" font-size="11">Update Details</text>
+            <ellipse cx="285" cy="195" rx="78" ry="22" fill="#fff" stroke="#14281d" stroke-width="2"/><text x="285" y="199" text-anchor="middle" font-size="11">Make Old Patient Appt</text>
+            <line x1="100" y1="98" x2="211" y2="92" stroke="#14281d" stroke-width="2"/>
+            <line x1="359" y1="88" x2="405" y2="75" stroke="#007f66" stroke-width="2" stroke-dasharray="5,4"/><polygon points="407,74 397,72 400,81" fill="#007f66"/><text x="383" y="69" text-anchor="middle" font-size="11" fill="#007f66" font-weight="bold">«include»</text>
+            <line x1="403" y1="135" x2="348" y2="110" stroke="#b45309" stroke-width="2" stroke-dasharray="5,4"/><polygon points="346,109 355,108 351,117" fill="#b45309"/><text x="388" y="135" text-anchor="middle" font-size="11" fill="#b45309" font-weight="bold">«extend»</text>
+            <line x1="285" y1="173" x2="285" y2="128" stroke="#14281d" stroke-width="2"/><polygon points="285,117 278,129 292,129" fill="#fff" stroke="#14281d" stroke-width="2"/>
+            <rect x="582" y="42" width="158" height="165" rx="8" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.5"/>
+            <text x="661" y="64" text-anchor="middle" font-size="12" font-weight="bold" fill="#b91c1c">NEVER ACTORS!</text>
+            <text x="661" y="92" text-anchor="middle" font-size="12">Internal Database</text><line x1="605" y1="80" x2="718" y2="100" stroke="#b91c1c" stroke-width="2.5"/><line x1="718" y1="80" x2="605" y2="100" stroke="#b91c1c" stroke-width="2.5"/>
+            <text x="661" y="140" text-anchor="middle" font-size="12">Printer</text><line x1="615" y1="128" x2="708" y2="148" stroke="#b91c1c" stroke-width="2.5"/><line x1="708" y1="128" x2="615" y2="148" stroke="#b91c1c" stroke-width="2.5"/>
+            <text x="661" y="182" text-anchor="middle" font-size="10" fill="#7f1d1d">(Week 3 Slide 21)</text>
+          </svg>
+        </div>
+        <div class="level-box">
+          <div class="level-tabs">
+            <button class="level-tab active" onclick="switchLevel(this, 0)">Level 1: Beginner</button>
+            <button class="level-tab" onclick="switchLevel(this, 1)">Level 2: Exam Standard</button>
+            <button class="level-tab" onclick="switchLevel(this, 2)">Level 3: Textbook &amp; Case 7</button>
+          </div>
+          <div class="level-content">
+            <div class="level-panel active"><p>Boundary box = the system itself. Actors (stick figures) sit outside. Use cases (horizontal ovals) sit inside and start with a <strong>Verb</strong>.</p></div>
+            <div class="level-panel">
+              <ul>
+                <li><strong><code>«include»</code> (Uses):</strong> Mandatory helper (arrow Base &rarr; Included).</li>
+                <li><strong><code>«extend»</code>:</strong> Optional/conditional add-on (arrow Extension &rarr; Base).</li>
+                <li><strong>Generalization:</strong> Applies to Actors and Use Cases (hollow triangle Child &rarr; Parent).</li>
+                <li><strong>Invalid Actors:</strong> Never draw internal Database or Printer as actors.</li>
+              </ul>
+            </div>
+            <div class="level-panel">
+              <ul>
+                <li><strong>[Textbook Ch. 4] Event-Driven Triggers:</strong> External triggers (customer orders) vs Temporal triggers (time-based events like bidding window closes or payroll).</li>
+                <li><strong>Case Study 7 (£70M Mobile Upgrade Bug):</strong> `Customer changes request` sends a second email to dispatch without cancelling the first email—causing 11% duplicate phones shipped!</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CH 4 -->
+      <section class="book-page" id="page-ch4">
+        <div class="page-header">
+          <div><div class="page-kicker">Chapter 4 • Day 4–5 PPTs + Textbook Ch. 5 &amp; App. 5A</div><h2>Databases, Integrity, Crow’s Foot ERDs &amp; Normalization</h2></div>
+          <div class="page-num">Page 6 of 15</div>
+        </div>
+        <span class="source-tag">CN7039 Day 4–5 PPTs &amp; Cinema ERD</span><span class="source-tag book-tag">Textbook 8e Ch. 5 &amp; App. 5A (1NF–3NF)</span>
+        <div class="level-box">
+          <div class="level-tabs">
+            <button class="level-tab active" onclick="switchLevel(this, 0)">Level 1: Keys &amp; Integrity</button>
+            <button class="level-tab" onclick="switchLevel(this, 1)">Level 2: Crow’s Foot &amp; M:N</button>
+            <button class="level-tab" onclick="switchLevel(this, 2)">Level 3: Normalization (1NF–3NF) &amp; CRUD</button>
+          </div>
+          <div class="level-content">
+            <div class="level-panel active">
+              <p><strong>Entity Integrity:</strong> Primary Key cannot be NULL or duplicated. <strong>Referential Integrity:</strong> Foreign Key must match an existing Primary Key in the parent table (deleting Khalil leaves orphan BookLoans unless cascaded). FK ALWAYS lives on the <strong>MANY</strong> side of `1:M`.</p>
+            </div>
+            <div class="level-panel">
+              <ul>
+                <li><strong>Optionality (min 0/1) &amp; Cardinality (max 1/many):</strong> <code>||</code> (exact 1), <code>O|</code> (0 or 1), <code>|&lt;</code> (1+), <code>O&lt;</code> (0, 1, or more).</li>
+                <li><strong>M:N Resolution:</strong> Insert an <strong>Associative (Intersection) Entity</strong> holding FKs of both parents (`Proj_Emp`, `ORDERED PRODUCT`, `ORDERED DRONE COMPONENT`).</li>
+                <li><strong>[Textbook Ch. 5] Independent vs Dependent Entities:</strong> Single-border box (own PK) vs Double-border box (borrows parent PK as part of its PK = <em>identifying relationship</em>).</li>
+              </ul>
+            </div>
+            <div class="level-panel">
+              <p><strong>[Textbook App. 5A] 3 Steps of Normalization (Employee File &rarr; 3NF):</strong></p>
+              <ul>
+                <li><strong>1NF (First Normal Form):</strong> Remove repeating attributes / repeating groups into new entities, and split composite attributes (`Home_Address` &rarr; Street, City, State, Zip).</li>
+                <li><strong>2NF (Second Normal Form):</strong> Must be 1NF + remove <strong>partial dependencies</strong> (every non-key attribute must depend on the <em>whole</em> concatenated key, not just part of it — e.g. `Skill_Description` depends only on `Skill_ID`, not `Emp_ID + Skill_ID + Date`).</li>
+                <li><strong>3NF (Third Normal Form):</strong> Must be 2NF + remove <strong>transitive dependencies</strong> (non-key attributes cannot depend on another non-key attribute — e.g. `Skill_Level_Name` depends on `Skill_Level_Code`, move to `SKILL_LEVEL`) and remove <strong>derived attributes</strong> (don’t store `Age` if `Birthdate` is stored).</li>
+                <li><strong>[Textbook Ch. 5] CRUD Matrix:</strong> Balances ERD with DFD—verify every attribute is Created, Read, Updated, Deleted by some process!</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CH 5 -->
+      <section class="book-page" id="page-ch5">
+        <div class="page-header">
+          <div><div class="page-kicker">Chapter 5 • Week 6 PPTs + Textbook Ch. 4</div><h2>Data Flow Diagrams, Conservation of Data &amp; Balancing</h2></div>
+          <div class="page-num">Page 7 of 15</div>
+        </div>
+        <span class="source-tag">CN7039 Week 6 PPTs &amp; Topic 6</span><span class="source-tag book-tag">Textbook 8e Ch. 4 (DFD Rules)</span>
+        <div class="callout blue">
+          <strong>Notation Bridge (Don’t Get Tricked!):</strong><br>
+          • <strong>CN7039 Drawn Slides (Wk 6 Slides 4–5):</strong> External Entity = <strong>Oval</strong>; Process = <strong>3-Part Box</strong> (Sequence #, Person/System Responsible, Verb Action); Data Store = <code>D1 | Name</code>.<br>
+          • <strong>Textbook Figures (Dennis et al. / PPT Slides 8, 12, 22, 27):</strong> External Entity = <strong>Shadowed Rectangle</strong>; Process = <strong>Rounded Rectangle</strong> (Number + Verb Phrase). Both follow the exact same rules!
+        </div>
+        <div class="level-box">
+          <div class="level-tabs">
+            <button class="level-tab active" onclick="switchLevel(this, 0)">Level 1: Law of Conservation</button>
+            <button class="level-tab" onclick="switchLevel(this, 1)">Level 2: Levelling &amp; Balancing</button>
+            <button class="level-tab" onclick="switchLevel(this, 2)">Level 3: Semantic &amp; Syntax Traps</button>
+          </div>
+          <div class="level-content">
+            <div class="level-panel active">
+              <p><strong>[Textbook Ch. 4] Prof. Dale Goodhue’s Law of Conservation of Data:</strong><br>
+              1. <em>Data at rest stays at rest until moved by a process</em> (No Entity&harr;Entity, Store&harr;Store, Entity&harr;Store direct flows!).<br>
+              2. <em>Processes cannot consume or create data</em> (No Black Hole/Sinkhole with 0 outputs; no Miracle with 0 inputs; no Grey/Impossible hole missing needed inputs—to make H<sub>2</sub>O you need BOTH H and O!).</p>
+            </div>
+            <div class="level-panel">
+              <ul>
+                <li><strong>Context Diagram (`0` / `0.0`):</strong> 1 process for entire system, external entities, <strong>NO Data Stores</strong>.</li>
+                <li><strong>Level 0 (`1, 2, 3...`):</strong> Explodes `0` into 3–7 processes + Data Stores. Net external inputs/outputs MUST <strong>balance</strong> with Context!</li>
+                <li><strong>Level 1 (`1.1`) &amp; Level 2 (`1.1.1`):</strong> Periods in number = DFD level! Stop decomposing when lowest process = 1 functional primitive (~25–50 lines of logic).</li>
+              </ul>
+            </div>
+            <div class="level-panel">
+              <ul>
+                <li><strong>No Two-Headed Arrows:</strong> Read and write to a Data Store must be two separate one-way arrows.</li>
+                <li><strong>Consistent Viewpoint &amp; Verb Rule:</strong> Output flow name must differ from input flow name; process verb must match what it does (`Calculate and save grades`).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CH 6 -->
+      <section class="book-page" id="page-ch6">
+        <div class="page-header">
+          <div><div class="page-kicker">Chapter 6 • Week 7–8 PPTs + Textbook Ch. 9, 11–12</div><h2>OOP, Class Diagrams, Cohesion/Coupling &amp; Conversion</h2></div>
+          <div class="page-num">Page 8 of 15</div>
+        </div>
+        <span class="source-tag">CN7039 Week 7–8 PPTs</span><span class="source-tag book-tag">Textbook 8e Ch. 9 (Cohesion/Coupling) &amp; Ch. 12</span>
+        <div class="level-box">
+          <div class="level-tabs">
+            <button class="level-tab active" onclick="switchLevel(this, 0)">Level 1: Class vs Object</button>
+            <button class="level-tab" onclick="switchLevel(this, 1)">Level 2: Big 4 Relationships</button>
+            <button class="level-tab" onclick="switchLevel(this, 2)">Level 3: Cohesion, Coupling &amp; Change Mgmt</button>
+          </div>
+          <div class="level-content">
+            <div class="level-panel active"><p><strong>Class</strong> = template (`[Name | -Attributes | +Methods()]`). <strong>Object Instance</strong> = concrete item (`412209 : Customer`). <strong>Encapsulation</strong> bundles data + behavior together. <strong>Polymorphism &amp; Override</strong> let subclasses respond differently to the same method (`computePay(hours)`).</p></div>
+            <div class="level-panel">
+              <ul>
+                <li><strong>Association (`──`):</strong> General link with multiplicity (`1`, `0..1`, `0..*`, `1..*`).</li>
+                <li><strong>Aggregation (`◇──` on Whole):</strong> Weak "has-a"; parts survive if whole dies (`Team ◇ Player`).</li>
+                <li><strong>Composition (`◆──` on Whole):</strong> Strong "has-a"; whole creates &amp; destroys parts (`Book ◆ Chapter`).</li>
+                <li><strong>Inheritance (`──▷` to Parent):</strong> "is-a" (`SpecialOrder ──▷ Order`).</li>
+              </ul>
+            </div>
+            <div class="level-panel">
+              <ul>
+                <li><strong>[Textbook Ch. 9] Cohesion (Best &rarr; Worst):</strong> <em>Functional</em> (1 task only—best!) &rarr; Sequential &rarr; Communicational &rarr; Procedural &rarr; Temporal &rarr; Logical &rarr; <em>Coincidental</em> (unrelated—worst!). Fix bad cohesion via <strong>Factoring</strong> (split into separate modules).</li>
+                <li><strong>[Textbook Ch. 9] Coupling (Best &rarr; Worst):</strong> <em>Data</em> (pass only needed fields—best!) &rarr; Stamp (whole record) &rarr; Control (flag passed) &rarr; Common (global data) &rarr; <em>Content</em> (refers inside another module—worst!). Aim for <strong>high fan-in</strong> (reusable modules) &amp; <strong>low fan-out</strong> (&le;7 subordinates).</li>
+                <li><strong>[Textbook Ch. 12] Lewin’s Change Model:</strong> Unfreeze &rarr; Move (Migration Plan) &rarr; Refreeze. Adopters: 20–30% Ready, 40–60% Reluctant, 20–30% Resistant.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CH 7 -->
+      <section class="book-page" id="page-ch7">
+        <div class="page-header">
+          <div><div class="page-kicker">Chapter 7 • Lab 9 + Textbook Ch. 7 &amp; 9</div><h2>Physical DFDs, Human–Machine Boundary &amp; 3-Tier Arch</h2></div>
+          <div class="page-num">Page 9 of 15</div>
+        </div>
+        <span class="source-tag">CN7039 Lab 9 PPTs &amp; Worksheet</span><span class="source-tag book-tag">Textbook 8e Ch. 7 &amp; 9</span>
+        <div class="callout blue">
+          <strong>[Textbook Ch. 9] 5 Steps to Convert Logical DFD &rarr; Physical DFD:</strong><br>
+          1. <strong>Add Implementation References:</strong> Data stores &rarr; actual DB tables (`MySQL: Order Table`, `MS SQL Account Register`); Processes &rarr; software/person (`Python`, `Visual Basic`, `Sage Accounting`); Flows &rarr; physical media (`WIN 2000 GUI`, `Input Form`, `READ:`, `UPDATE:`).<br>
+          2. <strong>Draw Human–Machine Boundary:</strong> Dashed line separating human actions from automated software.<br>
+          3. <strong>Add System-Related Stores/Processes:</strong> Audit logs (`D5 ASCII: Cancelled Order Log File`), backups, exception controls.<br>
+          4. <strong>Update System Data Elements:</strong> Add `last_update`, `updated_by`, generated IDs.<br>
+          5. <strong>Update CASE Metadata:</strong> Table sizes, batch frequencies.
+        </div>
+        <table>
+          <thead><tr><th>Architecture</th><th>Client Handles</th><th>Server Handles</th></tr></thead>
+          <tbody>
+            <tr><td><strong>File Server</strong></td><td>Presentation, Pres. Logic, App Logic, Data Manipulation</td><td>Data Layer only (high network load!)</td></tr>
+            <tr><td><strong>Thin Client–Server</strong></td><td>Presentation (+ minimal JS)</td><td>App Logic, Data Access (SQL), Data Storage</td></tr>
+            <tr><td><strong>Fat/Thick Client–Server</strong></td><td>Presentation, Pres. Logic, App Logic</td><td>Data Access, Data Storage</td></tr>
+            <tr><td><strong>3-Tier / n-Tier (Lab 9 &amp; Ch. 7)</strong></td><td>Tier 1: Client UI</td><td>Tier 2: Web/Application Server + Tier 3: Database Server</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- NEW PAGE: DECODE & DRAW FROM SCRATCH -->
+      <section class="book-page" id="page-draw">
+        <div class="page-header">
+          <div><div class="page-kicker">Practical Mastery Guide • Step-by-Step Recipes</div><h2>How to Decode &amp; Draw All 4 Diagrams From Scratch</h2></div>
+          <div class="page-num">Page 10 of 15</div>
+        </div>
+        <p>Never start drawing randomly! Follow these <strong>4-step Decode &amp; Draw Recipes</strong> combining CN7039 exam rules with Dennis et al.’s systematic methods:</p>
+
+        <h3>1. UML Use Case Diagram (Decode &amp; Draw)</h3>
+        <ul>
+          <li><strong>How to Decode in 30 Seconds:</strong> Find the Boundary title (what system is this?) &rarr; list Actors outside (confirm no DB/Printer!) &rarr; read every oval (does it start with a verb?) &rarr; check `«include»` (arrow points OUT to mandatory helper) vs `«extend»` (arrow points IN from optional add-on).</li>
+          <li><strong>How to Draw from Scratch:</strong> (1) Draw System Boundary rectangle + title; (2) Underline external nouns in the case study (people, external systems, time) = Actors outside; (3) Underline user goals (verb + noun) = Ellipses inside; (4) Connect Actors to their primary Use Cases; (5) Factor out shared mandatory steps with `«include»` (Base &rarr; Helper) and optional/conditional steps with `«extend»` (Extension &rarr; Base); (6) Group shared roles with `──▷` Inheritance (Child &rarr; Parent).</li>
+        </ul>
+
+        <h3>2. Entity Relationship Diagram — ERD (Decode &amp; Draw)</h3>
+        <ul>
+          <li><strong>How to Decode:</strong> Read entities as tables &rarr; check `*Identifier/PK` &rarr; read each line in <em>both directions</em> (`A` has `min..max` of `B`; `B` belongs to `min..max` of `A`) &rarr; verify no raw `M:N` lines remain &rarr; verify FKs sit on the MANY side!</li>
+          <li><strong>How to Draw from Scratch (Textbook Ch. 5 + CN7039):</strong> (1) List major nouns with <em>multiple instances</em> = Entities; (2) Add attributes + choose Identifier/PK (avoid composite full-name PKs, avoid storing derived fields like Age); (3) Draw lines and ask two questions for every pair: <em>"How many max?"</em> (Cardinality: `1` or `&lt;`) and <em>"Can one exist without the other?"</em> (Modality/Optionality: `O` if yes, `|` if no); (4) Resolve every `M:N` by inserting an Associative Entity between them; (5) Copy parent PKs into child tables as FKs; (6) Quick 3NF check (no repeating groups, no partial dependencies, no transitive dependencies).</li>
+        </ul>
+
+        <h3>3. Data Flow Diagram — DFD (Decode &amp; Draw)</h3>
+        <ul>
+          <li><strong>How to Decode:</strong> Start at leftmost External Entity &rarr; trace arrows through numbered Processes (`1`, `2`, `3`) to Data Stores (`D1`) &rarr; verify every process has &ge;1 valid input AND &ge;1 output (no Miracle, no Black Hole, no H<sub>2</sub>O missing-ingredient Grey Hole) &rarr; verify zero Entity&harr;Entity, Store&harr;Store, or Entity&harr;Store direct lines.</li>
+          <li><strong>How to Draw from Scratch (Textbook Ch. 4 + Week 6):</strong> (1) Write an <strong>Event–Response List</strong> from the text; (2) Draw the <strong>Context Diagram</strong> (`0`, External Entities, boundary data flows, <strong>zero Data Stores</strong>); (3) Create one <strong>DFD Fragment</strong> per major event/use case (add Data Stores needed to supply/save data); (4) Assemble Level 0 (`1..n`, top-left to bottom-right) and <strong>Balance</strong> every external flow back to the Context Diagram; (5) Explode complex processes into Level 1 (`1.1`, `1.2`) and Level 2 (`1.1.1`) if needed.</li>
+        </ul>
+
+        <h3>4. UML Class Diagram (Decode &amp; Draw)</h3>
+        <ul>
+          <li><strong>How to Decode:</strong> Check 3 compartments (`Name | -Attributes | +Methods()`) &rarr; identify `is-a` triangles (`──▷` points to Superclass) &rarr; identify `has-a` diamonds (diamond touches WHOLE: `◆` = dies together, `◇` = survives independently) &rarr; read multiplicities (`1`, `0..*`, `1..*`).</li>
+          <li><strong>How to Draw from Scratch:</strong> (1) Identify business classes from nouns; (2) Assign `-private` attributes and `+public()` behaviors (encapsulation); (3) Spot shared attributes/methods to pull up into a Superclass (`Person` &larr; `Customer`, `Manager`); (4) Connect remaining classes with Associations + Multiplicities; (5) Upgrade Whole–Part links to Composition (`◆`) if part dies with whole, or Aggregation (`◇`) if part survives independently.</li>
+        </ul>
+      </section>
+
+      <!-- STORY -->
+      <section class="book-page" id="page-story">
+        <div class="page-header">
+          <div><div class="page-kicker">Twin Case Stories • DrōnTeq (Textbook 8e) &amp; NovaCare Clinic</div><h2>Story of the 4 Main Diagrams in Action</h2></div>
+          <div class="page-num">Page 11 of 15</div>
+        </div>
+        <h3>Story A: DrōnTeq Client Flight Services <span class="source-tag book-tag">Textbook 8e Ch. 1–12</span></h3>
+        <p><strong>The Plot:</strong> Commercial drone maker DrōnTeq launches a new business unit connecting Clients needing aerial surveys with licensed Drone Pilots who bid on flight requests.</p>
+        <div class="callout blue">
+          <strong>1. Use Cases (`UC-2A`, `UC-2B`, `UC-2C`):</strong> Client submits a flight request (`External Trigger`) &rarr; `UC-2A Notify Pilots` (75-mile radius, expands +25 miles if none found) &rarr; `UC-2B Pilot Submits Bid` &rarr; `Bidding Window Closes` (`Temporal Trigger`) &rarr; `UC-2C Select Winning Flight Bid` (Flight Operations Manager checks drone sensors like infrared and picks winner).<br>
+          <strong>2. Process Model (DFD Ch. 4 &amp; 9):</strong> Fragment `2 Assign Flight Request to Pilot` explodes into Level 1 (`2.1`, `2.2`, `2.3`) and Level 2 (`2.1.1`–`2.1.4`), reading `D1 Flight Requests`, `D2 Pilots`, `D3 Pricing Guidelines`, and writing `D4 Flight Request Notifications` &amp; `D5 Flight Bids`. In Design (Ch. 9), it becomes a <strong>Physical DFD</strong> (`MySQL: Parts Request Table`, `Python`, dashed Human–Machine boundary, `D6 ASCII: Audit File`).<br>
+          <strong>3. Data Model (ERD Ch. 5 &amp; 10):</strong> `CLIENT` (`*CLI_ID`) `||──O&lt;` `FLIGHT REQUEST` (`*FRQ_ID`) `||──O&lt;` `FLIGHT REQUEST NOTIFICATION` (`*FRN_ID`). `FLIGHT BID` is a <strong>dependent entity</strong> (double border) identified by `*FLN_ID + *PIL_ID`. Verified balanced via a <strong>CRUD matrix</strong>!
+        </div>
+
+        <h3>Story B: NovaCare Clinic (All 4 Core Diagrams Connected)</h3>
+        <div class="callout">
+          • <strong>Use Case:</strong> `Old Patient` &amp; `New Patient` &rarr; `Patient` &rarr; `Make Appointment` (`«include»` `Verify Patient`; extended by `Update Details`). External actor: `Bank Payment System`.<br>
+          • <strong>ERD:</strong> `PATIENT ||──|&lt; APPOINTMENT`; M:N with `TREATMENT` resolved via associative entity `APPT_TREATMENT`.<br>
+          • <strong>Class Diagram:</strong> `Person` supertype &larr; `Patient`, `Doctor`. `Clinic ◇── Doctor` (Aggregation); `Patient ◆── Appointment` (Composition).<br>
+          • <strong>DFD:</strong> Context (`0 NovaCare System`) balances with Level 0 (`1 Verify Patient` &harr; `D1 Patients`, `2 Book &amp; Save Appointment` &rarr; `D2 Appointments`).
+        </div>
+      </section>
+
+      <!-- FLASHCARDS -->
+      <section class="book-page" id="page-flashcards">
+        <div class="page-header">
+          <div><div class="page-kicker">Active Recall Deck • 100 Terms (PPTs + Textbook 8e)</div><h2>Glossary Flashcard Vault</h2></div>
+          <div class="page-num">Page 12 of 15</div>
+        </div>
+        <div class="flash-controls">
+          <label><strong>Deck:</strong></label>
+          <select id="fcFilter" class="btn" onchange="loadFlashDeck()">
+            <option value="all">All Terms (100)</option>
+            <option value="wk1">Week 1 Essential Terms (39)</option>
+            <option value="wk2">Week 2 Key Terms (32)</option>
+            <option value="diag">Core Diagrams &amp; Lab 9 (12)</option>
+            <option value="book">Textbook 8e Deep-Dive Terms (17)</option>
+            <option value="review">Needs Review Only</option>
+          </select>
+          <span id="fcProgressLabel" style="font-size:0.86rem;color:var(--muted);"></span>
+        </div>
+        <div class="flash-scene">
+          <div class="flash-card" id="flashCard" onclick="this.classList.toggle('flipped')">
+            <div class="flash-face">
+              <div class="source-tag" id="fcDeckTag">WK1</div>
+              <div class="flash-term" id="fcFront">System</div>
+              <p style="font-size:0.82rem;color:var(--muted);margin-top:14px;">(Click card to flip)</p>
+            </div>
+            <div class="flash-face flash-back">
+              <div class="source-tag" id="fcDeckTagBack">Definition</div>
+              <p id="fcBack" style="font-size:1.02rem;margin:6px 0;"></p>
+              <p id="fcEx" style="font-size:0.88rem;color:var(--muted);margin:6px 0 0;"></p>
+            </div>
+          </div>
+        </div>
+        <div class="flash-actions">
+          <button class="btn" onclick="prevCard()">← Prev</button>
+          <button class="btn btn-danger" onclick="markCard(false)">✗ Review Again</button>
+          <button class="btn btn-primary" onclick="markCard(true)">✓ Mastered</button>
+          <button class="btn" onclick="nextCard()">Next →</button>
+        </div>
+      </section>
+
+      <!-- QUIZZES -->
+      <section class="book-page" id="page-patterns">
+        <div class="page-header">
+          <div><div class="page-kicker">Active Recall • Answers Hidden Until Attempt</div><h2>Quizzes &amp; Exam Question Patterns</h2></div>
+          <div class="page-num">Page 13 of 15</div>
+        </div>
+        <div id="quizContainer"></div>
+      </section>
+
+      <!-- BOOTCAMP -->
+      <section class="book-page" id="page-bootcamp">
+        <div class="page-header">
+          <div><div class="page-kicker">5-Stage Error-Detection Bootcamp</div><h2>Spot Every Mistake Before Submitting</h2></div>
+          <div class="page-num">Page 14 of 15</div>
+        </div>
+        <div id="bootcampContainer"></div>
+      </section>
+
+      <!-- MOCK & REGISTER -->
+      <section class="book-page" id="page-mock">
+        <div class="page-header">
+          <div><div class="page-kicker">Examiner Assessment • Timed 2-Hour Simulation</div><h2>200-Mark Mock Simulator &amp; Misconception Register</h2></div>
+          <div class="page-num">Page 15 of 15</div>
+        </div>
+        <div class="callout">
+          <strong>2-Hour TCA Timer (120 Mins):</strong>
+          <span id="mockTimer" style="font-size:1.3rem;font-weight:700;margin:0 14px;color:var(--accent);">120:00</span>
+          <button class="btn btn-primary" onclick="startMockTimer()">▶ Start 2-Hr Timer</button>
+          <button class="btn" onclick="resetMockTimer()">↺ Reset</button>
+        </div>
+        <h3>Misconception &amp; Error Register</h3>
+        <table>
+          <thead><tr><th>Topic</th><th>Mistake / Question</th><th>Correct Principle</th><th>Action</th></tr></thead>
+          <tbody id="registerBody"></tbody>
+        </table>
+        <button class="btn" onclick="clearRegister()">Clear Register</button>
+      </section>
+
+      <div class="book-footer">
+        <button class="btn" onclick="stepPage(-1)">← Previous Book Page</button>
+        <button class="btn btn-primary" onclick="stepPage(1)">Next Book Page →</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const PAGE_ORDER = ['cover','schedule','ch1','ch2','ch3','ch4','ch5','ch6','ch7','draw','story','flashcards','patterns','bootcamp','mock'];
+    let currentPage = 'cover';
+
+    function updateCountdown() {
+      const now = new Date();
+      const d16 = Math.max(0, Math.ceil((new Date('2026-12-16T23:59:59') - now) / 86400000));
+      const d18 = Math.max(0, Math.ceil((new Date('2026-12-18T13:00:00') - now) / 86400000));
+      document.getElementById('countdownBox').innerHTML = `<strong>To 16 Dec 2026:</strong> ${d16} days<br><strong>TCA (18 Dec 1 PM):</strong> ${d18} days`;
+    }
+    updateCountdown();
+
+    function goPage(id) {
+      currentPage = id;
+      document.querySelectorAll('.book-page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + id).classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      const match = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick')?.includes("'" + id + "'"));
+      if (match) match.classList.add('active');
+      document.getElementById('sidebar').classList.remove('open');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function stepPage(delta) {
+      const idx = PAGE_ORDER.indexOf(currentPage);
+      goPage(PAGE_ORDER[Math.max(0, Math.min(PAGE_ORDER.length - 1, idx + delta))]);
+    }
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('cn7039_dark', document.body.classList.contains('dark') ? '1' : '0');
+    }
+    if (localStorage.getItem('cn7039_dark') === '1') document.body.classList.add('dark');
+
+    function switchLevel(btn, idx) {
+      const box = btn.closest('.level-box');
+      box.querySelectorAll('.level-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+      box.querySelectorAll('.level-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+    }
+
+    let studiedPages = JSON.parse(localStorage.getItem('cn7039_pages') || '[]');
+    function updateProgress() {
+      const pct = Math.round((studiedPages.length / PAGE_ORDER.length) * 100);
+      document.getElementById('masteryFill').style.width = pct + '%';
+      document.getElementById('masteryText').textContent = `${pct}% (${studiedPages.length}/${PAGE_ORDER.length})`;
+    }
+    function markCurrentRead() {
+      if (!studiedPages.includes(currentPage)) {
+        studiedPages.push(currentPage);
+        localStorage.setItem('cn7039_pages', JSON.stringify(studiedPages));
+      }
+      updateProgress(); stepPage(1);
+    }
+    updateProgress();
+
+    const PLAN_32 = [
+      ['15 Nov','Ch. 1 (Wk 1): Systems, Data/Info, Stakeholders','NovaCare + 10 Wk1 Cards + Quiz 1–4'],
+      ['16 Nov','Ch. 1 (Wk 1): Drivers, ERP/SCM/CRM, Feasibility ROI/NPV','10 Wk1 Cards + Supermarket 12% Case'],
+      ['17 Nov','Ch. 1 (Wk 1): Project vs Process Mgmt, Consultant Effect','19 Wk1 Cards + Lift Case'],
+      ['18 Nov','Ch. 2 (Wk 2): SDLC 7 Phases & Cost-of-Error Graph','10 Wk2 Cards + Short Answer'],
+      ['19 Nov','Ch. 2 (Wk 2): Linear vs Waterfall, V-Model, Conversion','10 Wk2 Cards + Med Kits Case'],
+      ['20 Nov','Ch. 2 (Wk 2): Insourcing, Selfsourcing, Outsourcing','12 Wk2 Cards + Invisible Backlog'],
+      ['21 Nov','Ch. 2 (Wk 2): CBD (RAD/XP/Agile), Prototyping, Scrum','Book Flashcards + Mixed Sweep'],
+      ['22 Nov','Ch. 3 (Wk 3): UML, Boundary, Valid vs Invalid Actors','Decode & Draw UC + DrōnTeq UC'],
+      ['23 Nov','Ch. 3 (Wk 3): «include» vs «extend» vs Generalization','Bootcamp Stage 1 + Appointment UC'],
+      ['24 Nov','Ch. 3 (Wk 3): Case 7 (£70M Gap) & Peri Peri QR Queue','Diagnose Mobile Upgrade Bug'],
+      ['25 Nov','Ch. 3 Review: Draw Use Cases from Memory','ATM & Supermarket Speed Draw'],
+      ['26 Nov','Ch. 4 (Day 4–5): Keys, Entity & Referential Integrity','Decode & Draw ERD + Keys Cards'],
+      ['27 Nov','Ch. 4 (Day 4–5): Modality, Cardinality & Crow’s Foot','Activity 5.6 + Cinema ERD'],
+      ['28 Nov','Ch. 4 (Day 4–5): Associative Entities, Recursive & Gen.','DrōnTeq ERD (Independent vs Dependent)'],
+      ['29 Nov','Ch. 4 (App. 5A): Normalization 1NF → 2NF → 3NF & CRUD','Normalize Student Activity File'],
+      ['30 Nov','Mock 1 (Diagnostic Exam — 2-Hr Timer)','Log Mistakes in Register'],
+      ['01 Dec','Ch. 5 (Wk 6): DFD Notation (CN7039 vs Gane & Sarson)','Decode & Draw DFD + ATM DFD'],
+      ['02 Dec','Ch. 5 (Wk 6): Conservation of Data (Miracle/Sinkhole/Grey)','Bootcamp Stage 3 + Spot Mistakes'],
+      ['03 Dec','Ch. 5 (Wk 6): Context → Fragments → Level 0 Balancing','Grading Context & Hotel Level 0'],
+      ['04 Dec','Ch. 5 (Wk 6): Level 1 & Level 2 Functional Primitives','DrōnTeq L1/L2 + Tap Attendance'],
+      ['05 Dec','Ch. 6 (Wk 7–8): Objects, Encapsulation, Visibility','Decode & Draw Class + Book/Author'],
+      ['06 Dec','Ch. 6 (Wk 7–8): Inheritance, Polymorphism & Override','Online Shopping & Orders Diagrams'],
+      ['07 Dec','Ch. 6 (Wk 7–8): Association vs Aggregation vs Composition','Bootcamp Stage 5 + Car Rental 7.3'],
+      ['08 Dec','Ch. 6 (Ch. 9 & 12): Cohesion, Coupling & Change Mgmt','Structure Chart & Testing Review'],
+      ['09 Dec','Ch. 7 (Lab 9): 5 Steps Logical → Physical DFD','Human–Machine Boundary Drill'],
+      ['10 Dec','Ch. 7 (Lab 9): 5 Layers, File Server vs 3-Tier C/S','Lab 9 Architecture Worksheet'],
+      ['11 Dec','Mock 2 (Conceptual & Normalization Simulation)','100-Card Glossary Sweep'],
+      ['12 Dec','Mock 3 (4-Diagram Construction & Error Bootcamp)','Draw All 4 NovaCare Diagrams'],
+      ['13 Dec','Mock 4 (Unseen Business Case Simulation)','Root Cause + 4 Diagrams in 60m'],
+      ['14 Dec','Mock 5 (Full 2-Hour Final Simulation)','Strict Examiner Marking'],
+      ['15 Dec','Mock 6 (Personalised Misconception Attack)','Clear Every Logged Error'],
+      ['16 Dec','Final Polish: 1-Page Notation Sheets & Full Sweep','Ready for 17 Dec rest & 18 Dec TCA!']
+    ];
+    let doneSched = JSON.parse(localStorage.getItem('cn7039_s32') || '[]');
+    function renderSchedule() {
+      const today = new Date(), mNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const todayStr = String(today.getDate()).padStart(2,'0') + ' ' + mNames[today.getMonth()];
+      document.getElementById('scheduleTableWrap').innerHTML = '<table><thead><tr><th>✓</th><th>Date</th><th>Daily Chapter &amp; Topic</th><th>Story &amp; Practice Target</th></tr></thead><tbody>' +
+        PLAN_32.map((r, i) => `<tr class="${r[0]===todayStr?'today-row':''}"><td><input type="checkbox" ${doneSched.includes(i)?'checked':''} onchange="toggleS32(${i})"></td><td><strong>${r[0]}</strong></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('') + '</tbody></table>';
+    }
+    function toggleS32(i) {
+      if (doneSched.includes(i)) doneSched = doneSched.filter(x => x !== i); else doneSched.push(i);
+      localStorage.setItem('cn7039_s32', JSON.stringify(doneSched));
+    }
+    renderSchedule();
+
+    const FLASHCARDS = [
+      ['wk1','System','Process taking an input and producing an output (not exclusive to computers).','Ex: Respiratory system, Air conditioning.'],
+      ['wk1','Data','Raw facts describing a particular phenomenon.','Ex: Temperature (22°C), price (£3), age (40).'],
+      ['wk1','Information','Data with meaning within a specific context.','Ex: "Branch sales dropped 12% in Q3."'],
+      ['wk1','Information System (IS)','System taking Data as input, processing it, and outputting Information.','Ex: Supermarket POS + inventory system.'],
+      ['wk1','Information Technology (IT)','Hardware, software, and networking infrastructure supporting an IS.','Ex: Servers, scanners, networks.'],
+      ['wk1','Stakeholders','Any person (internal/external, technical/nontechnical) with an interest in an IS.','Ex: Owners, Users, Designers, Builders, Analysts.'],
+      ['wk1','Information Workers','Workers creating, collecting, processing, or distributing information.','Ex: Clerical staff, managers, analysts.'],
+      ['wk1','System Owners','Sponsors and executives responsible for paying for the IS project.','Ex: CEO or Finance Director.'],
+      ['wk1','System Users','People who use or are affected by the IS daily (Internal & External).','Ex: Clerks, managers, customers, suppliers.'],
+      ['wk1','Knowledge Worker','Specialist applying expertise and judgment.','Ex: Analyst, engineer, doctor.'],
+      ['wk1','Remote User','User off-premises accessing the IS from a fixed remote location.','Ex: Staff working from home.'],
+      ['wk1','Mobile User','User whose location constantly changes while accessing the IS.','Ex: Delivery driver using handheld device.'],
+      ['wk1','System Designer','Specialist translating user requirements into technical blueprints.','Ex: Database/UI architect.'],
+      ['wk1','System Builder','Specialist implementing components from designer blueprints.','Ex: Software programmer.'],
+      ['wk1','System Analyst','Specialist analyzing business/technical problems & opportunities (broader than Business Analyst).','Ex: Diagnosing 11% mobile gap.'],
+      ['wk1','External Service Provider','Third-party vendor or consultant providing IS services.','Ex: Outsourced software house.'],
+      ['wk1','Project Manager','Person planning, directing, and controlling a project within time & budget.','Ex: Managing milestones.'],
+      ['wk1','E-commerce','Buying and selling goods/services over the Internet (B2C, B2B).','Ex: Online retail checkout.'],
+      ['wk1','Electronic Business (E-Business)','Using the Internet to conduct and support all day-to-day business activities.','Ex: Supplier portals + HR + sales.'],
+      ['wk1','Knowledge','Data and information refined by facts, truths, beliefs, judgments, experiences, and expertise.','Ex: Knowledge base in Expert System.'],
+      ['wk1','Business Processes','Work, procedures, and rules to complete business tasks, independent of IT.','Ex: Restocking shelves daily.'],
+      ['wk1','Continuous Process Improvement (CPI)','Ongoing monitoring for small, measurable cost/value gains.','Ex: Reducing queue time by 2 mins.'],
+      ['wk1','Total Quality Management (TQM)','Comprehensive organization-wide approach to quality management.','Ex: Continuous quality culture.'],
+      ['wk1','Business Process Redesign (BPR)','Fundamental redesign of processes for substantial gains (complemented by CPI).','Ex: Redesigning dispatch workflow.'],
+      ['wk1','Object Technology','Modeling software as objects combining data and behavior.','Ex: Java, UML OO.'],
+      ['wk1','Object-Oriented Analysis and Design (OOAD)','Analyzing and designing systems using object models and UML.','Ex: Use Case + Class + Activity + SSD.'],
+      ['wk1','System Integration','Building a unified IS from purchased software, custom code, hardware, and networks.','Ex: Linking tills to ERP.'],
+      ['wk1','Enterprise Resource Planning (ERP)','Integrated software covering all technology systems/functions in an organization.','Ex: Finance + HR + SCM + CRM.'],
+      ['wk1','Supply Chain Management (SCM) System','Automates tracking of inventory & info from suppliers to products.','Ex: Auto-reordering warehouse stock.'],
+      ['wk1','Customer Relationship Management (CRM) System','Captures customer info from initial inquiry to post-sale support.','Ex: Call-center customer history.'],
+      ['wk1','Enterprise Application Integration (EAI)','Connecting separate enterprise apps so they share data seamlessly.','Ex: Bridging legacy billing to CRM.'],
+      ['wk1','Middleware','Software layer enabling clients, servers, or separate apps to communicate.','Ex: API/DB connector.'],
+      ['wk1','System Development Process','Activities, methods, best practices, deliverables, and tools to build/maintain IS.','Ex: 7-phase SDLC.'],
+      ['wk1','Project Management','Controlling a single project within allotted time and budget.','Ex: 2026 Cinema App launch.'],
+      ['wk1','Process Management','Ongoing coordination/improvement of methodology across all projects.','Ex: Company-wide SDLC standards.'],
+      ['wk1','System Initiation','Initial planning defining scope, goals, schedule, and budget.','Ex: Project scope/plan.'],
+      ['wk1','System Analysis','Studying the business problem domain to specify and prioritize requirements.','Ex: JAD + Sign-off.'],
+      ['wk1','System Design','Specifying the technical, computer-based solution (physical design).','Ex: Technical architecture + models.'],
+      ['wk1','System Implementation','Construction, installation, testing, training, and production delivery.','Ex: Parallel/Pilot rollout.'],
+      ['wk2','Insourcing','In-house IT builds the system (preferred for sensitive/unique systems).','Ex: Defense systems.'],
+      ['wk2','Selfsourcing','End users build small/local systems with little or no IT help.','Ex: Local spreadsheets/DBs.'],
+      ['wk2','Outsourcing','Delegating work to a third party for specified time, cost, and service level.','Ex: Custom vendor build.'],
+      ['wk2','SDLC','7-phase structured framework for building information systems.','Ex: Linear or Waterfall.'],
+      ['wk2','Waterfall Methodology','Sequential SDLC flowing down, but allowing steps back upstream to fix errors.','Ex: Returning from Testing to Design.'],
+      ['wk2','Seven Phases of Waterfall','Planning, Analysis, Design, Development, Testing, Implementation, Maintenance.','Memorise in exact order.'],
+      ['wk2','Critical Success Factors (CSF)','Key conditions that must succeed for the project/business to succeed.','Ex: Zero booking downtime.'],
+      ['wk2','Project Scope','Boundaries defining what is included and excluded in the project.','Ex: Phase 1 excludes iOS.'],
+      ['wk2','Scope Creep','Uncontrolled expansion beyond original project plans/boundaries.','Ex: Adding payroll mid-project.'],
+      ['wk2','Feature Creep','Continuously adding unplanned extra features during development.','Ex: Adding extra UI widgets.'],
+      ['wk2','Project Plan','Document specifying what tasks are done, when, and by whom.','Ex: Schedule & owners.'],
+      ['wk2','Project Milestone','Checkpoint marking completion of a major deliverable.','Ex: Analysis Sign-off.'],
+      ['wk2','Business Requirements','What the business/users need the system to do (Analysis outcome).','Ex: Functional rules.'],
+      ['wk2','Joint Application Development (JAD)','Participative workshops uniting IT specialists and users.','Ex: Facilitated design day.'],
+      ['wk2','Sign Off','Formal approval locking in requirements/phase deliverables.','Ex: Client approval.'],
+      ['wk2','Technical Architecture','Hardware, software, and telecom equipment required for the system.','Ex: Servers + DB + network.'],
+      ['wk2','Test Conditions','Scenarios defining what the system must pass in testing.','Ex: PIN lockout after 3 tries.'],
+      ['wk2','Unit Testing','Testing individual modules/components in isolation.','Ex: Testing 1 function.'],
+      ['wk2','Integration Testing','Testing combined modules together to verify interfaces.','Ex: Cart + Payment gateway.'],
+      ['wk2','System Testing','Testing the entire integrated system end-to-end.','Ex: Full clinic workflow.'],
+      ['wk2','User Acceptance Testing (UAT)','Final testing by real users to approve production release.','Ex: Staff testing before go-live.'],
+      ['wk2','Online & Workshop Training','Self-paced digital guides vs hands-on group workshops in Implementation.','Ex: Staff training sessions.'],
+      ['wk2','Parallel / Plunge / Pilot / Phased','Old+New together / Instant switch / 1 branch trial / Gradual rollout.','Ex: 1-branch pilot first.'],
+      ['wk2','Help Desk','Support team created in Maintenance for ongoing user help/changes.','Ex: IT support tickets.'],
+      ['wk2','Component-Based Development (CBD)','Building systems from reusable self-contained code blocks in a library.','Ex: Email/Credit Card component.'],
+      ['wk2','Rapid Application Development (RAD)','CBD using extensive user involvement + rapid prototypes + library reuse.','Ex: Iterative prototype cycles.'],
+      ['wk2','Extreme Programming (XP)','Breaks project into tiny phases; cannot advance until current tiny phase is done.','Ex: Used by Google/Microsoft.'],
+      ['wk2','Agile Methodology','Form of XP focused on continuous delivery of useful software components.','Ex: Plan-Design-Dev-Test-Deploy loops.'],
+      ['wk2','Invisible Backlog','Needed systems IT lacks time/budget to build (reduced by Selfsourcing).','Ex: Department tracking sheets.'],
+      ['wk2','Prototyping','Iterative working model built to gather user feedback early.','Ex: Paper/clickable screen mockups.'],
+      ['wk2','Proof-of-Concept','Prototype proving a proposed system is technically feasible.','Ex: Testing QR ping reliability.'],
+      ['wk2','Selling Prototype','Prototype built to convince management/users to fund the system.','Ex: Executive UI demo.'],
+      ['diag','Actor (Use Case)','External role (human, device, external system, or time). NEVER Database or Printer!','Ex: Bank Customer, Time.'],
+      ['diag','«include» vs «extend»','«include» (Base → Helper, mandatory) vs «extend» (Extension → Base, optional).','Ex: Withdraw «include» PIN.'],
+      ['diag','Primary Key vs Foreign Key','Unique row ID in own table vs PK from another table linking tables.','Ex: BookLoan(LoanID [PK], StudentID [FK]).'],
+      ['diag','Entity vs Referential Integrity','Entity: PK not NULL/duplicate. Referential: FK must match an existing PK.','Ex: No orphan loan rows.'],
+      ['diag','Optionality vs Cardinality','Min instances (0 or 1) vs Max instances (1 or Many).','Ex: |O< = zero, one, or many.'],
+      ['diag','Associative Entity','Junction table resolving an illegal M:N into two 1:M links.','Ex: Proj_Emp, Ordered Product.'],
+      ['diag','Miracle / Sinkhole / Grey Hole','0 inputs / 0 outputs / insufficient input for output.','Ex: DOB → Calc Grade (Grey hole).'],
+      ['diag','DFD Balancing & Illegal Links','Level 0 external flows match Context. Never Entity↔Entity, Store↔Store, Entity↔Store.','Ex: D5 → D6 is illegal.'],
+      ['diag','Encapsulation','Bundling attributes and methods together in one Class/Object.','Ex: Book(-ISBN, +open()).'],
+      ['diag','Aggregation (◇) vs Composition (◆)','Both on Whole: Aggregation = parts survive alone; Composition = whole destroys parts.','Ex: Team ◇ Player vs Book ◆ Chapter.'],
+      ['diag','Polymorphism & Override','Same message handled differently / Subclass replacing parent method.','Ex: computePay(hours).'],
+      ['diag','Logical vs Physical DFD & 3-Tier','Business what vs Tech how (WIN 2000 GUI, MS SQL, READ:/UPDATE:). 3-Tier = UI / App / Data.','Ex: Lab 9 Sage Accounting DFD.'],
+      // Textbook 8e (17)
+      ['book','Net Present Value (NPV) [Book 8e]','Sum of Present Value of Benefits minus Sum of Present Value of Costs; accept if > 0.','PV = CashFlow / (1 + r)^n.'],
+      ['book','Break-Even Point (Payback) [Book 8e]','Number of years required to recover initial project investment from net cash flows.','Ex: 2.68 years.'],
+      ['book','Weighted Alternative Matrix [Book 8e]','Scorecard comparing Custom, Packaged, and Outsourced options using weighted criteria.','Ex: 100-point weights x 1–5 scores.'],
+      ['book','Throwaway Prototyping [Book 8e]','Builds design prototypes to test risky UI/tech, then discards them before building real system.','More stable than System Prototyping.'],
+      ['book','First Normal Form (1NF) [Book 8e]','No repeating attributes or repeating attribute groups; every cell holds single atomic value.','Split composite address & repeating skills.'],
+      ['book','Second Normal Form (2NF) [Book 8e]','1NF + no partial dependencies (non-key attributes depend on the WHOLE concatenated PK).','Move Skill_Description out to JOB_SKILL.'],
+      ['book','Third Normal Form (3NF) [Book 8e]','2NF + no transitive dependencies (non-key depending on non-key) and no derived attributes.','Move Skill_Level_Name to SKILL_LEVEL; drop Age.'],
+      ['book','Independent vs Dependent Entity [Book 8e]','Own PK (single border) vs relies on parent PK as part of its PK (double border / identifying).','Ex: FLIGHT BID is dependent.'],
+      ['book','Modality (Null vs Not Null) [Book 8e]','Minimum participation rule: Optional (0) vs Required (|) in an ERD relationship.','Ex: Order requires a Customer (|).'],
+      ['book','CRUD Matrix [Book 8e]','Table mapping DFD Processes vs ERD Entities (Create, Read, Update, Delete) to verify balance.','Every stored field must be used.'],
+      ['book','Law of Conservation of Data [Book 8e]','(1) Data at rest stays at rest until moved by a process; (2) Processes cannot create or consume data.','Goodhue’s Law behind all DFD syntax.'],
+      ['book','Human–Machine Boundary [Book 8e]','Line on a Physical DFD separating manual user tasks from automated computer processes.','Step 2 of Logical → Physical DFD.'],
+      ['book','Functional vs Coincidental Cohesion [Book 8e]','Best: module performs 1 task only; Worst: module groups unrelated tasks. Fixed by Factoring.','Avoid "and" in module names!'],
+      ['book','Data vs Content Coupling [Book 8e]','Best: modules pass only needed data fields; Worst: one module jumps inside another module.','Keep coupling loose!'],
+      ['book','Black-Box vs White-Box Testing [Book 8e]','Tests against specs without seeing code vs inspects internal source code logic.','Alpha = fake data; Beta = real data.'],
+      ['book','Lewin’s Change Model [Book 8e]','Unfreeze (analysis/design) → Move (migration plan) → Refreeze (support & maintenance).','Adopters: Ready, Reluctant, Resistant.'],
+      ['book','Scrum (Product Owner / ScrumMaster) [Book 8e]','PO manages prioritized Product Backlog; ScrumMaster is servant leader removing team obstacles.','Sprints = 1–4 wks; measured by Velocity.']
+    ];
+
+    let fcDeck = [...FLASHCARDS], fcIndex = 0, reviewList = JSON.parse(localStorage.getItem('cn7039_fc_rev') || '[]');
+    function loadFlashDeck() {
+      const f = document.getElementById('fcFilter').value;
+      if (f === 'all') fcDeck = [...FLASHCARDS];
+      else if (f === 'review') fcDeck = FLASHCARDS.filter(c => reviewList.includes(c[1]));
+      else fcDeck = FLASHCARDS.filter(c => c[0] === f);
+      if (!fcDeck.length) fcDeck = [['diag','All Caught Up!','Zero cards marked for review.','Switch filter back to All Terms!']];
+      fcIndex = 0; renderCard();
+    }
+    function renderCard() {
+      const c = fcDeck[fcIndex];
+      document.getElementById('flashCard').classList.remove('flipped');
+      document.getElementById('fcDeckTag').textContent = c[0].toUpperCase();
+      document.getElementById('fcDeckTagBack').textContent = c[1];
+      document.getElementById('fcFront').textContent = c[1];
+      document.getElementById('fcBack').textContent = c[2];
+      document.getElementById('fcEx').textContent = c[3];
+      document.getElementById('fcProgressLabel').textContent = `Card ${fcIndex + 1} of ${fcDeck.length} (${reviewList.length} review)`;
+    }
+    function nextCard() { fcIndex = (fcIndex + 1) % fcDeck.length; renderCard(); }
+    function prevCard() { fcIndex = (fcIndex - 1 + fcDeck.length) % fcDeck.length; renderCard(); }
+    function markCard(ok) {
+      const term = fcDeck[fcIndex][1];
+      if (!ok && !reviewList.includes(term)) reviewList.push(term);
+      if (ok) reviewList = reviewList.filter(t => t !== term);
+      localStorage.setItem('cn7039_fc_rev', JSON.stringify(reviewList));
+      nextCard();
+    }
+    loadFlashDeck();
+
+    let register = JSON.parse(localStorage.getItem('cn7039_reg') || '[]');
+    function logMistake(topic, mistake, principle) {
+      if (!register.some(r => r.mistake === mistake)) {
+        register.push({ topic, mistake, principle });
+        localStorage.setItem('cn7039_reg', JSON.stringify(register));
+      }
+      renderRegister();
+    }
+    function renderRegister() {
+      const body = document.getElementById('registerBody');
+      if (!register.length) {
+        body.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);">No misconceptions logged yet. Test yourself in Quizzes &amp; Bootcamp!</td></tr>';
+        return;
+      }
+      body.innerHTML = register.map((r, i) => `<tr><td><strong>${r.topic}</strong></td><td>${r.mistake}</td><td>${r.principle}</td><td><button class="btn" onclick="removeReg(${i})">✓ Cleared</button></td></tr>`).join('');
+    }
+    function removeReg(i) { register.splice(i, 1); localStorage.setItem('cn7039_reg', JSON.stringify(register)); renderRegister(); }
+    function clearRegister() { register = []; localStorage.setItem('cn7039_reg', '[]'); renderRegister(); }
+    renderRegister();
+
+    const QUIZZES = [
+      { type:'mcq', topic:'Week 2: SDLC', q:'1. [MCQ] Key difference between Linear and Waterfall in CN7039?', opts:['A. Waterfall skips Testing','B. Linear allows going back; Waterfall does not','C. Waterfall allows going back up the stream to fix problems; Linear does not','D. Linear uses CBD'], ans:2, exp:'Week 2 Slides 20–23: Waterfall goes back upstream when problems are found; Linear cannot go back.' },
+      { type:'mcq', topic:'Week 3: Use Case', q:'2. [MCQ] Which must NEVER be drawn as an Actor?', opts:['A. External Bank System','B. Internal SQL Database','C. Time trigger','D. Customer Accounts System'], ans:1, exp:'Week 3 Slide 21 explicitly crosses out Database and Printer.' },
+      { type:'mcq', topic:'Day 4&5: ERD', q:'3. [MCQ] A Project has 1..* Employees and an Employee works on 0..* Projects. How must this be modelled?', opts:['A. Put ProjectID inside Employee','B. Add an Associative Entity (Proj_Emp) with both FKs','C. Leave M:N directly','D. Use Inheritance'], ans:1, exp:'Day 4&5 Slides 39–41: M:N cannot be directly implemented and requires an associative entity.' },
+      { type:'mcq', topic:'Week 6: DFD', q:'4. [MCQ] Process 3.2 takes Date of Birth and outputs Invoice Total. Which error?', opts:['A. Miracle','B. Sinkhole','C. Impossible / Grey Hole','D. Store-to-Store'], ans:2, exp:'Week 6 Slide 8: Input does not contain what is needed to produce the output.' },
+      { type:'mcq', topic:'Week 7&8: Class', q:'5. [MCQ] If a Book is destroyed, its Chapters cease to exist. Correct notation?', opts:['A. ◇ on Chapter','B. ◆ on Book','C. ◆ on Chapter','D. △ on Book'], ans:1, exp:'Week 7&8 Slide 23: Composition uses a filled diamond (◆) on the Whole (Book).' },
+      { type:'mcq', topic:'Textbook App. 5A: 2NF', q:'6. [MCQ — Book 8e] In an entity with concatenated key (Employee_ID, Skill_ID, Date_Acquired), the attribute Skill_Description depends ONLY on Skill_ID. Which normal form is violated?', opts:['A. 1NF (repeating group)','B. 2NF (partial dependency)','C. 3NF (derived attribute)','D. Referential Integrity'], ans:1, exp:'Appendix 5A p.199: When a non-key attribute depends on only PART of a concatenated identifier, it is a partial dependency violating 2NF.' },
+      { type:'mcq', topic:'Textbook App. 5A: 3NF', q:'7. [MCQ — Book 8e] Storing Student_Age alongside Student_Birthdate violates 3NF because Student_Age is a:', opts:['A. Concatenated key','B. Transitive/Derived attribute','C. Repeating attribute group','D. Dependent entity'], ans:1, exp:'Appendix 5A p.200: Derived (calculated) attributes like Age when Birthdate is present must be removed in 3NF.' },
+      { type:'mcq', topic:'Textbook Ch. 9: Coupling', q:'8. [MCQ — Book 8e] Which type of module coupling is the BEST (loosest) in program design?', opts:['A. Content coupling','B. Common coupling','C. Data coupling','D. Control coupling'], ans:2, exp:'Ch. 9 Fig. 9-16: Data coupling (passing only specific required fields) is best; Content coupling is worst.' },
+      { type:'tf', topic:'Week 3: Arrows', q:'9. [True/False] "An «extend» arrow points from the base use case toward the extension use case."', ans:'False', exp:'FALSE: «extend» points FROM the extension use case TO the base use case (Week 3 Slide 35).' },
+      { type:'tf', topic:'Day 4&5: Integrity', q:'10. [True/False] "Entity Integrity ensures a Primary Key cannot be NULL or duplicate."', ans:'True', exp:'TRUE: Day 4&5 Slide 22.' },
+      { type:'tf', topic:'Lab 9: Arch', q:'11. [True/False] "In File Server architecture, the server runs Application Logic and the client only runs Presentation."', ans:'False', exp:'FALSE: File Server only stores the Data layer; the client handles Presentation, Logic, and Data Manipulation.' },
+      { type:'tf', topic:'Textbook Ch. 9: Physical DFD', q:'12. [True/False — Book 8e] "A human–machine boundary on a Physical DFD separates external entities from data stores."', ans:'False', exp:'FALSE: Ch. 9 p.302: A human–machine boundary separates manual human actions from automated computer processes.' },
+      { type:'short', topic:'Week 1: BPR vs CPI', q:'13. [Short Answer — 4 Marks] Compare BPR and CPI, and state how they relate.', rubric:'CPI = ongoing monitoring for small, measurable gains. BPR = radical/fundamental process redesign for substantial gains. BPR is usually complemented by CPI afterward (Week 1 Slides 23–24).' },
+      { type:'short', topic:'Week 2: Medical Kits Case', q:'14. [Case Study — 6 Marks] Identify 3 places alarms should have been raised in the Medical Kits E-Commerce (£60k loss) case.', rubric:'(1) Planning: No SEO/market feasibility check (20 kits sold); (2) Analysis: Ignored user distrust of home tests + missed legal liability/disclaimer analysis; (3) Milestone budget gates: Ran out of £60k without early review.' }
+    ];
+    function renderQuizzes() {
+      document.getElementById('quizContainer').innerHTML = QUIZZES.map((item, idx) => {
+        if (item.type === 'mcq') return `<div class="q-card"><div class="source-tag">${item.topic}</div><p><strong>${item.q}</strong></p>${item.opts.map((o,oi)=>`<label class="q-opt"><input type="radio" name="q${idx}" value="${oi}"> ${o}</label>`).join('')}<button class="btn btn-primary" onclick="checkMCQ(${idx})">Submit</button><div class="feedback" id="fb-${idx}"></div></div>`;
+        if (item.type === 'tf') return `<div class="q-card"><div class="source-tag">${item.topic}</div><p><strong>${item.q}</strong></p><label class="q-opt"><input type="radio" name="q${idx}" value="True"> True</label><label class="q-opt"><input type="radio" name="q${idx}" value="False"> False</label><input type="text" id="tfj-${idx}" placeholder="1-sentence justification..."><button class="btn btn-primary" style="margin-top:8px;" onclick="checkTF(${idx})">Submit</button><div class="feedback" id="fb-${idx}"></div></div>`;
+        return `<div class="q-card"><div class="source-tag">${item.topic}</div><p><strong>${item.q}</strong></p><textarea id="sa-${idx}" rows="3" placeholder="Write your answer before checking rubric..."></textarea><button class="btn btn-primary" style="margin-top:8px;" onclick="checkShort(${idx})">Submit &amp; Reveal Rubric</button><div class="feedback" id="fb-${idx}"></div></div>`;
+      }).join('');
+    }
+    function checkMCQ(idx) {
+      const sel = document.querySelector(`input[name="q${idx}"]:checked`);
+      if (!sel) return alert('Select an option first!');
+      const item = QUIZZES[idx], ok = parseInt(sel.value) === item.ans, fb = document.getElementById(`fb-${idx}`);
+      fb.className = 'feedback show ' + (ok ? 'ok' : 'bad');
+      fb.innerHTML = (ok ? '<strong>✓ Correct!</strong> ' : '<strong>✗ Incorrect.</strong> ') + item.exp;
+      if (!ok) logMistake(item.topic, item.q, item.exp);
+    }
+    function checkTF(idx) {
+      const sel = document.querySelector(`input[name="q${idx}"]:checked`), j = document.getElementById(`tfj-${idx}`).value.trim();
+      if (!sel || j.length < 5) return alert('Select True/False AND write a justification!');
+      const item = QUIZZES[idx], ok = sel.value === item.ans, fb = document.getElementById(`fb-${idx}`);
+      fb.className = 'feedback show ' + (ok ? 'ok' : 'bad');
+      fb.innerHTML = `<strong>${ok?'✓ Correct!':'✗ Incorrect.'}</strong><br>Your Justification: ${j}<br><strong>Rule:</strong> ${item.exp}`;
+      if (!ok) logMistake(item.topic, item.q, item.exp);
+    }
+    function checkShort(idx) {
+      if (document.getElementById(`sa-${idx}`).value.trim().length < 10) return alert('Write an attempt first!');
+      const fb = document.getElementById(`fb-${idx}`);
+      fb.className = 'feedback show ok';
+      fb.innerHTML = `<strong>Compare strictly against Rubric:</strong><br>${QUIZZES[idx].rubric}`;
+    }
+    renderQuizzes();
+
+    const BOOTCAMP = [
+      {
+        stage:'Stage 1 (Beginner — 4 Errors)', title:'Cinema Booking Use Case Diagram',
+        req:'Customers browse movies, book tickets, and optionally apply a voucher. Booking requires validating payment. System stores bookings internally.',
+        svg:`<svg viewBox="0 0 680 205" width="100%"><rect x="0" y="0" width="680" height="205" fill="#fff"/><rect x="165" y="15" width="350" height="175" fill="#f8fafc" stroke="#14281d" stroke-width="2"/><text x="340" y="34" text-anchor="middle" font-weight="bold" font-size="13">Cinema Booking System</text><text x="65" y="102" text-anchor="middle" font-weight="bold" font-size="12">[Customer]</text><ellipse cx="255" cy="64" rx="65" ry="19" fill="#fff" stroke="#14281d"/><text x="255" y="68" text-anchor="middle" font-size="11">Browse Movies</text><line x1="100" y1="96" x2="190" y2="67" stroke="#14281d"/><ellipse cx="255" cy="118" rx="60" ry="19" fill="#fff" stroke="#14281d"/><text x="255" y="122" text-anchor="middle" font-size="11">Book Ticket</text><ellipse cx="435" cy="78" rx="60" ry="19" fill="#fff" stroke="#14281d"/><text x="435" y="82" text-anchor="middle" font-size="11">Validate Pay</text><line x1="375" y1="83" x2="315" y2="110" stroke="#b91c1c" stroke-dasharray="4,3"/><polygon points="313,111 322,107 324,116" fill="#b91c1c"/><text x="345" y="92" font-size="10" fill="#b91c1c">«include»</text><ellipse cx="435" cy="142" rx="60" ry="19" fill="#fff" stroke="#14281d"/><text x="435" y="146" text-anchor="middle" font-size="11">Apply Voucher</text><line x1="315" y1="123" x2="375" y2="138" stroke="#b91c1c" stroke-dasharray="4,3"/><polygon points="376,138 366,141 368,132" fill="#b91c1c"/><text x="345" y="146" font-size="10" fill="#b91c1c">«extend»</text><ellipse cx="255" cy="166" rx="62" ry="18" fill="#fff" stroke="#14281d"/><text x="255" y="170" text-anchor="middle" font-size="11">Store Booking</text><text x="598" y="170" text-anchor="middle" font-weight="bold" font-size="11">[Internal Database]</text><line x1="535" y1="166" x2="317" y2="166" stroke="#b91c1c"/></svg>`,
+        checks:['Internal Database cannot be an Actor','«include» points the wrong way','«extend» points the wrong way','Customer is missing association to Book Ticket','Browse Movies must be outside boundary'],
+        correctIdx:[0,1,2,3],
+        answerExp:'4 errors: Internal DB is not an actor; «include» must point Book Ticket → Validate Pay; «extend» must point Apply Voucher → Book Ticket; Customer needs link to Book Ticket.'
+      },
+      {
+        stage:'Stage 3 (Advanced — DFD Logic & Balancing)', title:'University Grading Level 0 DFD',
+        req:'Context diagram has 0 Grading System taking Submitted Work (Student) & Class Roster (Student Records) and sending Final Grade (Student Records).',
+        svg:`<svg viewBox="0 0 680 185" width="100%"><rect x="0" y="0" width="680" height="185" fill="#fff"/><ellipse cx="75" cy="52" rx="50" ry="21" fill="#ecfdf5" stroke="#14281d"/><text x="75" y="56" text-anchor="middle" font-size="11">Student</text><rect x="200" y="28" width="130" height="50" fill="#f8fafc" stroke="#14281d"/><text x="265" y="57" text-anchor="middle" font-size="11">1. Calculate Grade</text><line x1="125" y1="52" x2="198" y2="52" stroke="#14281d"/><polygon points="200,52 190,47 190,57"/><text x="162" y="44" text-anchor="middle" font-size="10">Student ID</text><rect x="420" y="33" width="130" height="40" fill="#fff" stroke="#14281d"/><text x="485" y="57" text-anchor="middle" font-size="11">D1 Grades</text><line x1="330" y1="52" x2="418" y2="52" stroke="#14281d"/><polygon points="420,52 410,47 410,57"/><text x="374" y="44" text-anchor="middle" font-size="10">Final Grade</text><rect x="420" y="116" width="140" height="40" fill="#fff" stroke="#14281d"/><text x="490" y="140" text-anchor="middle" font-size="11">D2 Transcripts</text><line x1="485" y1="73" x2="485" y2="114" stroke="#b91c1c"/><polygon points="485,116 480,106 490,106" fill="#b91c1c"/><text x="530" y="98" font-size="10" fill="#b91c1c">Grade Record</text><ellipse cx="75" cy="136" rx="55" ry="21" fill="#ecfdf5" stroke="#14281d"/><text x="75" y="140" text-anchor="middle" font-size="11">Instructor</text><line x1="75" y1="115" x2="75" y2="75" stroke="#b91c1c"/><polygon points="75,73 70,83 80,83" fill="#b91c1c"/><text x="128" y="98" font-size="10" fill="#b91c1c">Office Hours</text></svg>`,
+        checks:['Grey hole: Student ID cannot calculate grade','Illegal Store-to-Store (D1 → D2)','Illegal Entity-to-Entity (Instructor → Student)','Unbalanced with Context Diagram','Verb incomplete (should be Calculate and save grade)'],
+        correctIdx:[0,1,2,3,4],
+        answerExp:'All 5 are genuine DFD errors from Topic 6 Tutorial Q3!'
+      },
+      {
+        stage:'Stage 5 (Expert — Genuine Error vs Valid Elements)', title:'Car Rental Class Diagram Check',
+        req:'Branch has 1 Manager (1..1) and 1..* Cars. If a Branch closes, Cars move to another Branch. Customer places 0..* Rentals.',
+        svg:`<svg viewBox="0 0 680 170" width="100%"><rect x="0" y="0" width="680" height="170" fill="#fff"/><rect x="25" y="22" width="130" height="52" fill="#fff" stroke="#14281d"/><text x="90" y="42" text-anchor="middle" font-weight="bold" font-size="12">Branch</text><line x1="25" y1="50" x2="155" y2="50" stroke="#14281d"/><text x="35" y="65" font-size="10">-branchAddr</text><rect x="245" y="22" width="130" height="52" fill="#fff" stroke="#14281d"/><text x="310" y="42" text-anchor="middle" font-weight="bold" font-size="12">Car</text><line x1="245" y1="50" x2="375" y2="50" stroke="#14281d"/><text x="255" y="65" font-size="10">-regNo</text><polygon points="155,49 167,43 179,49 167,55" fill="#14281d" stroke="#14281d"/><line x1="179" y1="49" x2="245" y2="49" stroke="#14281d"/><text x="182" y="39" font-size="10">1</text><text x="225" y="39" font-size="10">1..*</text><rect x="470" y="22" width="175" height="62" fill="#fff" stroke="#14281d"/><text x="557" y="42" text-anchor="middle" font-weight="bold" font-size="12">Customer</text><line x1="470" y1="50" x2="645" y2="50" stroke="#14281d"/><text x="480" y="66" font-size="10">-custID / +bookRental()</text><rect x="25" y="104" width="130" height="50" fill="#fff" stroke="#14281d"/><text x="90" y="124" text-anchor="middle" font-weight="bold" font-size="12">Manager</text><line x1="25" y1="131" x2="155" y2="131" stroke="#14281d"/><text x="35" y="146" font-size="10">-payrollNo</text><line x1="90" y1="74" x2="90" y2="104" stroke="#14281d"/><text x="98" y="93" font-size="10">1..1 to 1..1</text><rect x="470" y="106" width="175" height="48" fill="#fff" stroke="#14281d"/><text x="557" y="125" text-anchor="middle" font-weight="bold" font-size="12">Rental</text><line x1="470" y1="132" x2="645" y2="132" stroke="#14281d"/><text x="480" y="147" font-size="10">-rentalID</text><line x1="557" y1="84" x2="557" y2="106" stroke="#14281d"/><text x="565" y="99" font-size="10">1 to 0..*</text><line x1="375" y1="64" x2="470" y2="126" stroke="#14281d"/><text x="415" y="110" font-size="10">1 to 0..*</text></svg>`,
+        checks:['Branch ◆— Car Composition is wrong (Cars survive if Branch closes; must be Aggregation ◇)','Customer 1 — 0..* Rental is wrong','Car 1 — 0..* Rental is wrong','Branch — Manager 1..1 to 1..1 is wrong'],
+        correctIdx:[0],
+        answerExp:'ONLY #1 is wrong! Cars survive Branch closure so it must be Aggregation (◇). All other multiplicities are valid.'
+      }
+    ];
+    function renderBootcamp() {
+      document.getElementById('bootcampContainer').innerHTML = BOOTCAMP.map((b,bi)=>`
+        <div class="q-card"><div class="source-tag examiner-tag">${b.stage}</div><h3 style="margin-top:4px;">${b.title}</h3><p style="font-size:0.9rem;">${b.req}</p><div class="diagram-frame">${b.svg}</div>${b.checks.map((c,ci)=>`<label class="q-opt"><input type="checkbox" name="bc-${bi}" value="${ci}"> ${c}</label>`).join('')}<button class="btn btn-primary" onclick="checkBootcamp(${bi})">Submit &amp; Reveal Marking</button><div class="feedback" id="bc-fb-${bi}"></div></div>`).join('');
+    }
+    function checkBootcamp(bi) {
+      const boxes = Array.from(document.querySelectorAll(`input[name="bc-${bi}"]:checked`)).map(x=>parseInt(x.value));
+      if (!boxes.length) return alert('Tick at least one box!');
+      const b = BOOTCAMP[bi], exact = boxes.length === b.correctIdx.length && boxes.every(v=>b.correctIdx.includes(v));
+      const fb = document.getElementById(`bc-fb-${bi}`);
+      fb.className = 'feedback show ' + (exact?'ok':'bad');
+      fb.innerHTML = (exact?'<strong>✓ 100% Exact!</strong> ':'<strong>⚠ Missed/False Positive.</strong> ') + b.answerExp;
+      if (!exact) logMistake(b.stage, b.title, b.answerExp);
+    }
+    renderBootcamp();
+
+    let timerSec = 7200, timerInt = null;
+    function renderTimer() {
+      document.getElementById('mockTimer').textContent = `${String(Math.floor(timerSec/60)).padStart(2,'0')}:${String(timerSec%60).padStart(2,'0')}`;
+    }
+    function startMockTimer() {
+      if (timerInt) return;
+      timerInt = setInterval(() => { if (timerSec > 0) { timerSec--; renderTimer(); } else { resetMockTimer(); alert('2 Hours Complete!'); } }, 1000);
+    }
+    function resetMockTimer() { clearInterval(timerInt); timerInt = null; timerSec = 7200; renderTimer(); }
+  </script>
+</body>
+</html>
